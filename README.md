@@ -13,3 +13,7 @@ The basic codebase in this project is a command line utility (for OS X) that get
 If I have time, I'll wrap this in an Arduino library repository so that it can easily be added to your projects, but until then it will just be one Arduino project.
 
 Future possibilities would be to record midi data to SMF, but that functionality is not planned.
+
+# Building
+
+You should be able to just type 'make' to have it build.  There are a few test targets 'test1', 'test2', 'test3' which rely on having some midi files.  If you type 'make midifiles' and have Curl installed, it will retrieve a bunch of MIDI files from the net to operate on.
