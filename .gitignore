@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# new
+build/
+lmt
+songs/
+*.swp
+.DS_Store
