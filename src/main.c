@@ -294,7 +294,7 @@ unsigned int MIDI_ReadV( FILE * fp )
 
 /* --- MIDI File processor ------------------------------------ */ 
 
-char tbuf[32];
+char tbuf[64];
 
 char * MIDI_ToString( unsigned char command )
 {
@@ -302,14 +302,14 @@ char * MIDI_ToString( unsigned char command )
     sprintf( tbuf, "? (x%02x)", command );
 
     switch( command & 0xF0 ) {
-    case( 0x80 ): sprintf( tbuf, "v%02d Note Off   3 ", voice ); break;
-    case( 0x90 ): sprintf( tbuf, "v%02d Note On    3 ", voice ); break;
-    case( 0xa0 ): sprintf( tbuf, "v%02d Aftertouch 3 ", voice ); break;
-    case( 0xb0 ): sprintf( tbuf, "v%02d Ctrl/Mode  3 ", voice ); break;
-    case( 0xc0 ): sprintf( tbuf, "v%02d Prog Chng  2 ", voice ); break;
-    case( 0xd0 ): sprintf( tbuf, "v%02d Chan Pres  2 ", voice ); break;
-    case( 0xe0 ): sprintf( tbuf, "v%02d Pitch Whl  3 ", voice ); break;
-    case( 0xF0 ): sprintf( tbuf, "System Exclusive V " ); break;
+    case( 0x80 ): sprintf( tbuf, "v%02d - Note Off", voice ); break;
+    case( 0x90 ): sprintf( tbuf, "v%02d - Note On", voice ); break;
+    case( 0xa0 ): sprintf( tbuf, "v%02d - Aftertouch", voice ); break;
+    case( 0xb0 ): sprintf( tbuf, "v%02d - Ctrl/Mode", voice ); break;
+    case( 0xc0 ): sprintf( tbuf, "v%02d - Prog Change", voice ); break;
+    case( 0xd0 ): sprintf( tbuf, "v%02d - Chan Pressure", voice ); break;
+    case( 0xe0 ): sprintf( tbuf, "v%02d - Pitch Wheel", voice ); break;
+    case( 0xF0 ): sprintf( tbuf, "System Exclusive" ); break;
     }
     return tbuf;
 }

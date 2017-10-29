@@ -27,16 +27,17 @@
 # 
 
 
-#######################################################################
-# Build options
+############################################################
+# target and source filenames
 
 TARG := lmt 
 
 SRCS := src/main.c \
 	src/llamidi.c 
 
+
 ####################
-# general build rules
+# general build flags
 
 LDFLAGS += -g
 DEFS += 
@@ -45,38 +46,54 @@ LIBS +=
 INCS += 
 
 
-################################################################################
+############################################################
+# the primary target
+# stay on target
 
 all: $(TARG)
 .PHONY: all
 
-################################################################################
 
+############################################################
+# build rules
+
+# automatically create the object file list
 OBJS := $(SRCS:src/%.c=build/%.o)
 
+# link
 $(TARG): $(OBJS)
 	@echo link $@
 	@$(CC) $(CFLAGS) $^ $(LDFLAGS) -v $(LIBS) -o $@
 
 
-################################################################################
+# all of the source files get their object files built
+# into the "build" directory
 
+# compile source to object files
 build/%.o: src/%.c
 	@echo build -- $(CC) $<	
 	@$(CC) $(CFLAGS) $(DEFS) $(INCS) -c -o $@ $<
 
 $(OBJS): build
 
+
+# and the directory we put object files into
 build:
 	@echo Making Build Directiory
 	@mkdir build/
 
-################################################################################
-# grab the midi files to test with from http://karthik82.tripod.com/mus_midi_doom.htm
+
+############################################################
+# grab some midi files to test with 
+# - I'm doing it this way, rather than including them in the
+#   repository to mitigate/eliminate legal entanglements
 
 midifiles: doomsongs mariosongs tetrisongs
+.PHONY: midifiles
+
 
 ####################
+# from http://karthik82.tripod.com/mus_midi_doom.htm
 
 tetrisongs:
 	@mkdir -p songs/tetris
@@ -84,7 +101,7 @@ tetrisongs:
 	cd songs/tetris ; curl -O https://files.khinsider.com/midifiles/gameboy/tetris/music-b.mid
 	cd songs/tetris ; curl -O https://files.khinsider.com/midifiles/gameboy/tetris/music-c.mid
 	cd songs/tetris ; curl -O https://files.khinsider.com/midifiles/gameboy/tetris/title-screen.mid
-
+.PHONY: tetrisongs
 
 
 ####################
@@ -94,10 +111,13 @@ mariosongs:
 	cd songs/mario; curl -O http://www.midishrine.com/midipp/gmb/Super_Mario_Land/overworld.mid
 	cd songs/mario; curl -O http://www.midishrine.com/midipp/gmb/Super_Mario_Land/overworld2.mid
 	cd songs/mario; curl -O http://www.midishrine.com/midipp/gmb/Super_Mario_Land/pipe.mid
+.PHONY: mariosongs
+
 
 ####################
 
 doomsongs: songs/doom-doom2-midi.zip
+.PHONY: doomsongs
 
 songs/doom-doom2-midi.zip:
 	@mkdir -p songs/
@@ -110,27 +130,36 @@ songs/doom-doom2-midi.zip:
 
 RETRIEVEDFILES += songs/doom-doom2-midi.zip
 
-songs:
-	@mkdir songs/
 
-.PHONY: midifiles
-
-
-################################################################################
+############################################################
+# utility targets
 
 clean: 
 	@echo removing all build files.
 	@rm -rf build $(OBJS) $(TARG) $(TARGS)
+.PHONY: clean
 
 clobber: clean
 	@echo removing all retrieved files.
+	@echo (leaving all .MID files though...)
 	@rm -rf $(RETRIEVEDFILES)
+.PHONY: clobber
+
+
+# for the test targets, make sure the songs exist
+# first by running 'make midifiles'
+test: test1
+.PHONY: test
 
 test1: $(TARG)
 	./$(TARG) songs/mario/overworld.mid
+.PHONY: test1
 
 test2: $(TARG)
 	./$(TARG) songs/doom/e1m1.mid 
+.PHONY: test2
 
 test3: $(TARG)
 	./$(TARG) songs/doom2/MAP01.MID
+.PHONY: test3
+
